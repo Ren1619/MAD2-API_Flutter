@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'services/bootprint_api_service.dart';
 import 'providers/bootprint_provider.dart';
 import 'screens/space_explorer_screen.dart';
 
-void main() {
+void main() async {
+  // Ensure Flutter is initialized
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Load environment variables
+  try {
+    await dotenv.load(fileName: ".env");
+    print("Environment variables loaded successfully");
+  } catch (e) {
+    print("Failed to load environment variables: $e");
+    // Continue with default values
+  }
+  
   runApp(const MyApp());
 }
 
@@ -13,9 +26,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Create API service
+    // Create API service with base URL from environment
     final apiService = BootprintApiService();
-
+    
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
